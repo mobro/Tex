@@ -12,22 +12,31 @@
 \usepackage{multirow}
 \usepackage{rotating}
 \usepackage{booktabs}
-\usepackage{listings} \lstset{numbers=left, numberstyle=\tiny, numbersep=5pt} \lstset{language=Matlab} % Code einbinden 
+\usepackage{hyperref}
+\usepackage{listings} \lstset{numbers=left, numberstyle=\tiny, numbersep=5pt}
+\lstset{language=Matlab} % Code einbinden 
 \begin{document}
 \title{Automatic Tablet Authentification}
 \part{Einleitung}
 Um eine möglichst einfache Anmeldung an einem Tablet zu ermöglichen wäre es wünschenswert, nur mittels anfassen des Tablets angemeldet zu werden. Eine Möglichkeit dieses Scenario zu realisieren wird im folgenden untersucht.
 \part{Methodik}
-Ein kleiner Sender emittiert ein Amplituden Shift Key Signal mit einer Trägerfrequenz von 2,4 kHz. Dieses Signal wird von einem Tablet empfangen mithilfe einer elektronischen Schaltung die am Kopfhörereingang angeschlossen ist. Das Signal ist folgender Maßen aufgebaut:
+Ein kleiner Sender emittiert ein Amplituden Shift Key (ASK) Signal mit einer Trägerfrequenz von 2,4 kHz. Dieses Signal wird von einem Tablet empfangen mithilfe einer elektronischen Schaltung die am Kopfhörereingang angeschlossen ist. Das Signal ist folgender Maßen aufgebaut:
 \begin{itemize}
-\item Ein Trägersignal mit einer Frequenz von 2,4kHz
+\item Ein ASK moduliertes Trägersignal mit einer Frequenz von 2,4kHz sendet zwei Codewörter
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{2byteASK.jpg}
+	\caption{Im Empfangssignal befinden sich 2 ASK modulierte Codewörter}
+	\label{img:1bit}
+\end{figure}
 \item Zwoelf Perioden des Trägersignals entsprechen einem Bit
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.9\textwidth]{1bit.jpg}
+	\includegraphics[width=0.8\textwidth]{1bit.jpg}
 	\caption{Ein Bit besteht aus 12 Perioden der Trägerfrequenz}
 	\label{img:1bit}
 \end{figure}
+
 \item Ein Datenwort besteht aus einem Startbit acht Datenbits und einem Paritätsbit. Das Paritätsbit ist eins wenn die Zahl der High Datenbits ungerade ist und null wenn die Zahl der Low Datenbits gerade ist.
 \item Insgesamt werden zwei Datenworte übertragen
 \item Das erste Datenwort dient nur zur Erkennung der Übertragungsqualität
@@ -35,6 +44,51 @@ Ein kleiner Sender emittiert ein Amplituden Shift Key Signal mit einer Trägerfr
 \item Die Datenbits des ersten Datenworts sind folgendermaßen aufgebaut: 10101010
 \item Die Datenbits des zweiten Datenworts können z.B. folgendermaßen aufgebaut sein: 10010001, dies entspricht 0x91.
 \end{itemize}
+
+Damit die Nutzdaten aus dem Empfangssignal gelesen werden können wird mittels eines Bandpasses, dessen Mittenfrequenz der Trägerfrequenz des ASK-Signals entspricht, die störenden Frequenzanteile des Empfangssignals unterdrückt.
+ 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{Empfangssignal.jpg}
+	\caption{Empfangssignal vor der Filterung}
+	\label{img:1bit}
+\end{figure} 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{filteredSignal.jpg}
+	\caption{Empfangssignal nach der Filterung}
+	\label{img:1bit}
+\end{figure}  
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{filteredSignal_zoom.jpg}
+	\caption{Die zwei Code Worte direkt nach der Filterung}
+	\label{img:1bit}
+\end{figure}  
+\clearpage
+Das gefilterte Eingangssignal wird anschließend noch gleichgerichtet und mittels eines Box Filters der gleitende Mittelwert gebildet. Um eine binäre Amplitude über das gesamte Signal zu erhalten, wird zunächste die maximale Amplitude ermittelt. Der Schwellwert bei dem entschieden wird ob die Amplitude 0 oder 1 ist die Hälfte des Maximalwerts.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Data.jpg}
+	\caption{Die Stelle an der sich das Codewort befindet nach der gleitenden Mittelwertbildung}
+	\label{img:1bit}
+\end{figure}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{threshold.jpg}
+	\caption{Werte oberhalb des Grenzwerts bekommen den binären Wert 1 zugewiesen, Werte unterhalb den binären Wert 0}
+	\label{img:1bit}
+\end{figure}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{binarySignal.jpg}
+	\caption{Die Amplitude des Signals liegt in binärer Form vor, die Anzahl Samples pro Bit hängt von der Samplerate ab}
+	\label{img:1bit}
+\end{figure}
+\clearpage
+\newpage
 
 \part{Software}
 Die Software muss aus der aufgezeichneten .wav Datei die Daten heraus filtern. Dies wird erreicht durch eine Transformation in den Freuquenzbereich. 
@@ -53,7 +107,11 @@ Die Software muss aus der aufgezeichneten .wav Datei die Daten heraus filtern. D
 \item Die Daten aus dem zweiten Code Word in einen 8 Byte großen Buffer einlesen
 \item Die acht Byte in ein Byte umcodieren
 \end{itemize}
+
+\clearpage
+\newpage
 \part{Scilab/Matlab}
+Scilab bzw. Matlab wurden verwendet um die Signalverarbeitungsschritte auf dem PC zu untersuchen. Außerdem wurden so die auf dem Android Device erstellten *.wav Files grafisch dargestellt.
 \begin{tiny}
 \begin{lstlisting}
 
@@ -130,7 +188,12 @@ result
 
 \end{lstlisting}
 \end{tiny}
+
+\clearpage
+\newpage
 \part{Android}
+Mit Hilfe der OpenCV Library (2.4.6) für Android lässt sich auf einem Android Device eine diskrete Fourier Transformation durchführen. Einfach die Library in Eclipse einbinden und im Projekt hinzufügen (import org.opencv). Auf dem Android Device werden im Debug mode einzelne Schritte als *.wav Files abgespeichert. Diese Files können für eine Untersuchung auf einen PC übertragen werden.
+
 \lstset{
    language=Java,
    basicstyle=\tiny,
@@ -145,8 +208,6 @@ result
    extendedchars=\true,
    inputencoding=utf8x
 }
-Mit Hilfe der OpenCV Library (2.4.6) für Android lässt sich auf einem Android Tablet eine diskrete Fourier Transformation durchführen. Einfach die Library in Eclipse einbinden und im Projekt hinzufügen (import org.opencv) und
-
 \begin{tiny}
 \begin{lstlisting}
 private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -355,13 +416,119 @@ else
 
 \end{lstlisting} 
 
+\clearpage
+\newpage
 
 
 \part{Messergebnisse}
+Die Abb. \ref{img:IdealesEmpfangssignal} zeigt ein ideales Empfangssignal bei maximaler Empfangsstärke, minimaler Abstand Sender zu Empfänger. Das Nutzsignal ist in diesem Fall sehr gut zu decodieren, da
+\begin{itemize}
+\item die maximale Amplitude vom Nutzsignal verursacht wird und nicht von einer Störung 
+\item die einzelenen Bits durchgehend oberhalb bzw. unterhalb des Grenzwertes von 1/3 Maximal Amplitude liegen
+\end{itemize} 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{notBehindTablet.jpg}
+	\caption{Empfänger ist nicht direkt hinter Panasonic Tablet}
+	\label{img:IdealesEmpfangssignal}
+\end{figure}
+Ist der Sender relativ weit vom Empfänger entfernt, ist das Nutzsignal nur noch schwach vorhanden Abb. \ref{img:schwachesSignal}.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{weakSignal.jpg}
+	\caption{Schwaches Signal mit Ein- und Ausschaltstörungen}
+	\label{img:schwachesSignal}
+\end{figure}
+Die Abb. \ref{img:StartEndeCut} zeigt ein Empfangssignal bei dem der Start und das Ende ausgeblendet wurden, das Signal ist noch zu decodieren.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{weakButGoodSignal.jpg}
+	\caption{Schwaches Signal kann noch erkannt werden, Start und Ende sind ausgeblendet}
+	\label{img:StartEndeCut}
+\end{figure}
+Die Abb. \ref{img:StartEndeCut2} zeigt den Grenzwert und das sich ergebende Signal, hier wird das richtige Pattern noch erkannt.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{weakButGoodSignal2.jpg}
+	\caption{Schwaches Signal kann noch erkannt werden, Start und Ende sind ausgeblendet, Grenzwert und daraus resultierende binäre Amplituden}
+	\label{img:StartEndeCut2}
+\end{figure}
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{20130827_125846.jpg}
+	\caption{Messaufbau, die Datenübertragung funktioniert über eine Luftstrecke}
+	\label{img:Verbindung über Luft}
+\end{figure}
+
+\clearpage
+\newpage
+
+In den beiden Abb. \ref{img:KeineStörungenVomTablet} und \ref{img:StörungenVomTablet} ist der Einfluss des Tablets auf das empfangene Signal sichtbar. Befindet sich der Empfänger hinter dem Tablet sind die Störanteile größer wie wenn der Empfänger neben dem Tablet liegt.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{signalWhitoutDistortion.jpg}
+	\caption{Empfänger befindet sich neben dem Tablet direkt neben dem Sender, Verbindung über Luft}
+	\label{img:KeineStörungenVomTablet}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{signalWhitDistortion.jpg}
+	\caption{Empfänger befindet sich unter bzw. hinter dem Tablet direkt neben dem Sender, Verbindung über Luft}
+	\label{img:StörungenVomTablet}
+\end{figure}
+
+\clearpage
+\newpage
+
+Die Abbildungen \ref{img:Messaufbau}, \ref{img:KomplettSignal} und \ref{img:NutzsignalVergroessert} demonstrieren die erfolgreiche Übertragung des Netzsignals über eine Strecke von 80cm Luft mit einer einer Signalqualität von 7 Prozent.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{20130827_160856.jpg}
+	\caption{Verbindung über Luft, Entfernung Sender Empfänger 80cm, Signalqualität Faktor 7\%, Messaufbau}
+	\label{img:Messaufbau}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{80cmKomplett.jpg}
+	\caption{Verbindung über Luft, Entfernung Sender Empfänger 80cm, Signalqualität Faktor 7\%, das Signal ist komplett dargestellt}
+	\label{img:KomplettSignal}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{80cmZoom.jpg}
+	\caption{Verbindung über Luft, Entfernung Sender Empfänger 80cm, Signalqualität Faktor 7\%, der Bereich des Nutzsignals ist vergrößert dargestellt}
+	\label{img:NutzsignalVergroessert}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{durchOberschenkel.jpg}
+	\caption{Sender befindet sich unter Oberschenkel Empfänger auf dem Oberschenkel, Signal wird nicht mehr erkannt}
+	\label{img:Oberschenkel}
+\end{figure}
+
+\href{run:1.wav}{click to play the sound!}
+
+\clearpage
+\newpage
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1.0\textwidth]{20130827_171133.jpg}
+	\caption{Messaufbau, Sender befindet sich unter Oberschenkel Empfänger auf dem Oberschenkel, Signal wird nicht mehr erkannt}
+	\label{img:MessaufbauOberschenkel}
+\end{figure}
+
+
+\clearpage
+\newpage
 \begin{sideways}
 \begin{small}
-\begin{tabular}{ llr llr llr llr llr llr llr llr llr }
+\begin{tabular}[h!]{ llr llr llr llr llr llr llr llr llr }
 
 \toprule
 Tester & Testort & \multicolumn{3}{ c }{Tag Position} & Tablet & Recognition & Quality & Link\\ \cmidrule(r){1-9}
@@ -404,5 +571,8 @@ Tester & Testort & \multicolumn{3}{ c }{Tag Position} & Tablet & Recognition & Q
 \end{tabular}
 \end{small}
 \end{sideways}
+
+\clearpage
+\newpage
 \part{Zusammenfassung}
 \end{document}
