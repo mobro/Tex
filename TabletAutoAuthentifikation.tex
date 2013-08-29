@@ -1,4 +1,4 @@
-\documentclass[10pt]{article}
+\documentclass[10pt]{scrartcl}
 
 \usepackage[ngerman]{babel} % deutsche Silbentrennung
 \usepackage[T1]{fontenc}
@@ -10,15 +10,35 @@
 \usepackage[svgnames]{xcolor} 
 \usepackage{graphicx}
 \usepackage{multirow}
+\usepackage{lmodern}
 \usepackage{rotating}
 \usepackage{booktabs}
 \usepackage{hyperref}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+
+\fancyhead[RO,RE]{ Testo AG }
+\renewcommand{\headrulewidth}{0.1pt}
+\renewcommand{\footrulewidth}{0.05pt}
 \usepackage{listings} \lstset{numbers=left, numberstyle=\tiny, numbersep=5pt}
 \lstset{language=Matlab} % Code einbinden 
 \begin{document}
-\title{Automatic Tablet Authentification}
+\title{Automatische Tablet Authentifikation}
+\author{bhu}
+\date{\today}
+\maketitle
+
+\tableofcontents
 \part{Einleitung}
-Um eine möglichst einfache Anmeldung an einem Tablet zu ermöglichen wäre es wünschenswert, nur mittels anfassen des Tablets angemeldet zu werden. Eine Möglichkeit dieses Scenario zu realisieren wird im folgenden untersucht.
+Um eine möglichst einfache anwenderfreundliche Anmeldung an einem Tablet PC zu ermöglichen wäre es wünschenswert, nur mittels anfassen des Tablets angemeldet zu werden. 
+Eine Möglichkeit dieses Szenario zu realisieren wird im folgenden untersucht.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{20130828_133953.jpg}
+	\caption{Anmeldescreen der HACCP Applikation auf einem NEXUS 7}
+	\label{img:1bit}
+\end{figure}
 \part{Methodik}
 Ein kleiner Sender emittiert ein Amplituden Shift Key (ASK) Signal mit einer Trägerfrequenz von 2,4 kHz. Dieses Signal wird von einem Tablet empfangen mithilfe einer elektronischen Schaltung die am Kopfhörereingang angeschlossen ist. Das Signal ist folgender Maßen aufgebaut:
 \begin{itemize}
@@ -421,6 +441,17 @@ else
 
 
 \part{Messergebnisse}
+
+
+\section{Senderplatten oben/unten}
+Dieses Kapitel beschreibt Messungen bei denen die Platten des Senders oberhalb und unterhalb des Kunstoffkästchens angebracht sind und nur eine Platte des Handgriffs angeschlossen ist.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{20130828_111725.jpg}
+	\caption{Plattenaufbau des Senders}
+	\label{img:SenderPlattenObenUnten}
+\end{figure}
+
 Die Abb. \ref{img:IdealesEmpfangssignal} zeigt ein ideales Empfangssignal bei maximaler Empfangsstärke, minimaler Abstand Sender zu Empfänger. Das Nutzsignal ist in diesem Fall sehr gut zu decodieren, da
 \begin{itemize}
 \item die maximale Amplitude vom Nutzsignal verursacht wird und nicht von einer Störung 
@@ -428,14 +459,14 @@ Die Abb. \ref{img:IdealesEmpfangssignal} zeigt ein ideales Empfangssignal bei ma
 \end{itemize} 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=1.0\textwidth]{notBehindTablet.jpg}
+	\includegraphics[width=0.7\textwidth]{notBehindTablet.jpg}
 	\caption{Empfänger ist nicht direkt hinter Panasonic Tablet}
 	\label{img:IdealesEmpfangssignal}
 \end{figure}
 Ist der Sender relativ weit vom Empfänger entfernt, ist das Nutzsignal nur noch schwach vorhanden Abb. \ref{img:schwachesSignal}.
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=1.0\textwidth]{weakSignal.jpg}
+	\includegraphics[width=0.7\textwidth]{weakSignal.jpg}
 	\caption{Schwaches Signal mit Ein- und Ausschaltstörungen}
 	\label{img:schwachesSignal}
 \end{figure}
@@ -456,7 +487,7 @@ Die Abb. \ref{img:StartEndeCut2} zeigt den Grenzwert und das sich ergebende Sign
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=1.0\textwidth]{20130827_125846.jpg}
+	\includegraphics[width=0.7\textwidth]{20130827_125846.jpg}
 	\caption{Messaufbau, die Datenübertragung funktioniert über eine Luftstrecke}
 	\label{img:Verbindung über Luft}
 \end{figure}
@@ -467,14 +498,14 @@ Die Abb. \ref{img:StartEndeCut2} zeigt den Grenzwert und das sich ergebende Sign
 In den beiden Abb. \ref{img:KeineStörungenVomTablet} und \ref{img:StörungenVomTablet} ist der Einfluss des Tablets auf das empfangene Signal sichtbar. Befindet sich der Empfänger hinter dem Tablet sind die Störanteile größer wie wenn der Empfänger neben dem Tablet liegt.
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.7\textwidth]{signalWhitoutDistortion.jpg}
+	\includegraphics[width=0.5\textwidth]{signalWhitoutDistortion.jpg}
 	\caption{Empfänger befindet sich neben dem Tablet direkt neben dem Sender, Verbindung über Luft}
 	\label{img:KeineStörungenVomTablet}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.7\textwidth]{signalWhitDistortion.jpg}
+	\includegraphics[width=0.5\textwidth]{signalWhitDistortion.jpg}
 	\caption{Empfänger befindet sich unter bzw. hinter dem Tablet direkt neben dem Sender, Verbindung über Luft}
 	\label{img:StörungenVomTablet}
 \end{figure}
@@ -482,11 +513,11 @@ In den beiden Abb. \ref{img:KeineStörungenVomTablet} und \ref{img:StörungenVom
 \clearpage
 \newpage
 
-Die Abbildungen \ref{img:Messaufbau}, \ref{img:KomplettSignal} und \ref{img:NutzsignalVergroessert} demonstrieren die erfolgreiche Übertragung des Netzsignals über eine Strecke von 80cm Luft mit einer einer Signalqualität von 7 Prozent.
+Die Abbildungen \ref{img:Messaufbau}, \ref{img:KomplettSignal} und \ref{img:NutzsignalVergroessert} demonstrieren die erfolgreiche Übertragung des Nutzsignals über eine Strecke von 80cm Luft mit einer einer Signalqualität von 7 Prozent.
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=1.0\textwidth]{20130827_160856.jpg}
+	\includegraphics[width=0.7\textwidth]{20130827_160856.jpg}
 	\caption{Verbindung über Luft, Entfernung Sender Empfänger 80cm, Signalqualität Faktor 7\%, Messaufbau}
 	\label{img:Messaufbau}
 \end{figure}
@@ -507,72 +538,115 @@ Die Abbildungen \ref{img:Messaufbau}, \ref{img:KomplettSignal} und \ref{img:Nutz
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=1.0\textwidth]{durchOberschenkel.jpg}
+	\includegraphics[width=0.8\textwidth]{durchOberschenkel.jpg}
 	\caption{Sender befindet sich unter Oberschenkel Empfänger auf dem Oberschenkel, Signal wird nicht mehr erkannt}
 	\label{img:Oberschenkel}
 \end{figure}
 
-\href{run:1.wav}{click to play the sound!}
-
 \clearpage
 \newpage
+
+Das folgende wav file wurde aufgenommen bei der Messung durch den Oberschenkel:
+\href{run:Appendix/1.wav}{Sound file anhören!}
+
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=1.0\textwidth]{20130827_171133.jpg}
+	\includegraphics[width=0.7\textwidth]{20130827_171133.jpg}
 	\caption{Messaufbau, Sender befindet sich unter Oberschenkel Empfänger auf dem Oberschenkel, Signal wird nicht mehr erkannt}
 	\label{img:MessaufbauOberschenkel}
 \end{figure}
 
+\clearpage
+\newpage
+Nachfolgend wird ein Messaufbau beschrieben bei dem der Sender sich unter einem 27cm hoher Bücherstapel befand und der Empfänger auf dem Bücherstapel. Das Signal wird im Vergleich zur Messung durch den Oberschenkel nicht abgeschwächt.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\textwidth]{20130828_104256.jpg}
+	\caption{Messaufbau, Sender befindet sich unter Bücherstapel Empfänger auf dem Bücherstapel, Signal wird erkannt mit einer Signalqualität von 1 Prozent}
+	\label{img:MessaufbauBücherstapel}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Buecherstapel.jpg}
+	\caption{Empfangssignal, Sender befindet sich unter Bücherstapel Empfänger auf dem Bücherstapel, Signal wird erkannt mit einer Signalqualität von 1 Prozent}
+	\label{img:EmpfangssignalBücherstapel}
+\end{figure}
 
 \clearpage
 \newpage
-\begin{sideways}
-\begin{small}
-\begin{tabular}[h!]{ llr llr llr llr llr llr llr llr llr }
+\section{Senderplatten auf einer Seite}
+Versuchsweise wurden für eine weitere Messung durch den Oberschenkel der Sender umgebaut. Abbildung \ref{img:SenderPlattenaufbau} zeigt den Sender, hier wurden die beiden Platten auf einer Seite der Box verwendet. Bei der Handschlaufe wurden ebenfalls beide Platten verwendet. Dieser Aufbau verbessert allerdings die Messung durch den Oberschenkel nicht merklich, siehe Abbildung \ref{img:EmpfangssignalOberschenkelPlattenEinerSeite}.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{20130828_135144.jpg}
+	\caption{Sender; die Senderplatten befinden sich auf einer Seite}
+	\label{img:SenderPlattenaufbau}
+\end{figure}
 
-\toprule
-Tester & Testort & \multicolumn{3}{ c }{Tag Position} & Tablet & Recognition & Quality & Link\\ \cmidrule(r){1-9}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{durchOberschenkelPlattenEineSeite.jpg}
+	\caption{Empfangssignal; Sender befindet sich unter Oberschenkel Empfänger auf dem Oberschenkel, Signal wird nicht erkannt}
+	\label{img:EmpfangssignalOberschenkelPlattenEinerSeite}
+\end{figure}
 
-\multirow{16}{*}{bhu} & \multirow{16}{*}{Ap. bhu} 
- 
- & \multirow{8}{*}{ESD Sch.} 
- & \multirow{4}{*}{Sitzen} 
- & l.v. Ht & \multirow{16}{*}{r. H.} & 91 & 5 & \\ 
- &&&& r. v. Ht & & 91 & 2 & \\ 
- &&&& l. h. Ht & & 91 & 11 & \\ 
- &&&& r. h. Ht & & 91 & C & \\ 
+\clearpage
+Folgende Messung untersucht wie das Signal durch den Unterarm beeinflusst wird. Abbildung \ref{img:MitArmMesssignal} und \ref{img:OhneArmMesssignal} zeigen, dass das Messsignal durch den Arm scheinbar abgeschwächt wird. 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{20130828_152159.jpg}
+	\caption{Mit Arm; }
+	\label{img:MitArm}
+\end{figure}
 
- \cmidrule(r){4-4}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{mitArm.jpg}
+	\caption{Mit Arm; }
+	\label{img:MitArmMesssignal}
+\end{figure}
 
- &&& \multirow{4}{*}{Stehen}
- & l. v. Ht & & 91 & 13 & \\ 
- &&&& r. v. Ht & & 0 & 14 & \\ 
- &&&& l. h. Ht & & 0 & 1A & \\ 
- &&&& r. h. Ht & & 0 & E & \\ 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{20130828_152445.jpg}
+	\caption{Ohne Arm; }
+	\label{img:OhneArm}
+\end{figure}
 
- \cmidrule(r){3-4}
-
- && \multirow{8}{*}{Str. Sch.} 
- & \multirow{4}{*}{Sitzen} 
- & l. v. Ht & & 91 & 1 & \\ 
- &&&& r. v. Ht & & 91 & 2 & \\ 
- &&&& l. h. Ht & & 91 & 6 & \\ 
- &&&& r. h. Ht & & 91 & 6 & \\ 
-
- \cmidrule(r){4-4}
-
- &&& \multirow{4}{*}{Stehen}
- & l. v. Ht & & 91 & 6 & \\ 
- &&&& r. v. Ht & & 0 & 8 & \\ 
- &&&& l. h. Ht & & 0 & F & \\ 
- &&&& r. h. Ht & & 0 & B & \\ 
- \bottomrule
-
-\end{tabular}
-\end{small}
-\end{sideways}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{ohneArm.jpg}
+	\caption{Ohne Arm; }
+	\label{img:OhneArmMesssignal}
+\end{figure}
 
 \clearpage
 \newpage
 \part{Zusammenfassung}
+Wie die Ergebnisse in Tabelle \ref{tab:TabelleMessergebnisse} zeigt, scheint die Übertragung über Luft statt zu finden. 
+\begin{table}[h!]
+\caption{Tests maximale Signalreichweite bei unterschiedlichen Verhältnissen}
+
+\begin{small}
+\begin{tabular}[h!] { p{1cm} p{6cm} p{5cm} }
+\toprule
+Tester & Testfall & Ergebnis\\ \cmidrule(r){1-3}
+\multirow{8}{*}{bhu} 
+& Übertragung über eine Distanz von 80cm Luftstrecke & Übertragung erfolgreich \\ 
+\cmidrule(r){2-3}
+& Übertragung über einen Stapel Bücher & Übertragung erfolgreich \\ 
+\cmidrule(r){2-3}
+& Übertragung durch den Oberschenkel & Übertragung nicht erfolgreich \\ 
+\cmidrule(r){2-3}
+& Übertragung durch den Unterarm und die gleiche Strecken in Luft & Signal wird durch den Körper abgeschwächt \\ 
+
+ \bottomrule
+
+\end{tabular}
+\end{small}
+
+\label{tab:TabelleMessergebnisse}
+\end{table}
 \end{document}
